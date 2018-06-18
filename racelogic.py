@@ -1,3 +1,4 @@
+import pyrtl
 from functools import reduce
 
 class Infinity:
@@ -36,4 +37,14 @@ def ri(i,x):
         return inf
     return x
 
-def rvd(a,b
+def rvd(a,c,i):
+    ''' variable delay function '''
+    return min( (rd(a,c)), (ri(i,a)) )
+
+def rcoincidence(a,b,c):
+    ''' timed max function '''
+    return ri( (rd(min(a,b),c)), (max(a,b)) )
+
+def rvcoincidence(a,b,c,i):
+    ''' variable timed max function '''
+    return ri( (rvd(min(a,b),c,i)), (max(a,b)) )
