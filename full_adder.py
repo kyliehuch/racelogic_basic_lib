@@ -17,10 +17,12 @@ temp3 = a & c # declaration and initialization of temp3, use =
 
 carry_out <<= temp1 | temp2 | temp3
 
+# print working block
 print('---------- Full Adder Implementation ----------')
 print(pyrtl.working_block())
 print()
 
+# Simulate hardware
 print('---------- Full Adder Simulation ----------')
 sim_trace = pyrtl.SimulationTrace()
 sim = pyrtl.Simulation(tracer=sim_trace)
@@ -34,6 +36,7 @@ for cycle in range(15):
 
 sim_trace.render_trace(symbol_len=5, segment_size=5)
 
+# check results
 for cycle in range(15):
     add_result = (sim_trace.trace['a'][cycle] +
                   sim_trace.trace['b'][cycle] +
