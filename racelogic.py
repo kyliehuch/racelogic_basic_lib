@@ -59,37 +59,20 @@ def rvcoincidence(a,b,c,i):
     return ri(variable_timer, rmax(a,b))
 
 # tests:
-print("rmin(inf,5) = ", end="")
-print(rmin(inf,5))
-print("rd(5,2) = ", end="")
-print(rd(5,2))
-print("ri(5,2) = ", end="")
-print(ri(5,2))
-print("ri(2,5) = ", end="")
-print(ri(2,5))
-print("rvd(5,2,8) = ", end="")
-print(rvd(5,2,8))
-print("rvd(5,2,3) = ", end="")
-print(rvd(5,2,3))
-print("rvd(5,2,7) = ", end="")
-print(rvd(5,2,7))
-print("rvd(5,2,6) = ", end="")
-print(rvd(5,2,6))
-print("rvd(5,2,5) = ", end="")
-print(rvd(5,2,5))
-print("rcoincidence(5,2,1) = ", end="")
-print(rcoincidence(5,2,1))
-print("rcoincidence(5,2,4) = ", end="")
-print(rcoincidence(5,2,4))
-print("rcoincidence(5,2,3) = ", end="")
-print(rcoincidence(5,2,3))
-print("rcoincidence(5,2,3.1) = ", end="")
-print(rcoincidence(5,2,3.1))
-print("rvcoincidence(5,2,4,3) = ", end="")
-print(rvcoincidence(5,2,4,3)) # delay off
-print("rvcoincidence(5,2,4,1) = ", end="")
-print(rvcoincidence(5,2,4,1)) # delay on
-print("rvcoincidence(5,2,1,3) = ", end="")
-print(rvcoincidence(5,2,1,3)) # delay off
-print("rvcoincidence(5,2,1,1) = ", end="")
-print(rvcoincidence(5,2,1,1)) # delay on
+print("rmin(inf,5) = ", rmin(inf,5))
+print("rd(5,2) = ", rd(5,2))
+print("ri(5,2) = ", ri(5,2))
+print("ri(2,5) = ", ri(2,5))
+print("rvd(5,2,8) = ", rvd(5,2,8))
+print("rvd(5,2,3) = ", rvd(5,2,3))
+print("rvd(5,2,7) = ", rvd(5,2,7))
+print("rvd(5,2,6) = ", rvd(5,2,6))
+print("rvd(5,2,5) = ", rvd(5,2,5))
+print("rcoincidence(5,2,1) = ", rcoincidence(5,2,1))
+print("rcoincidence(5,2,4) = ", rcoincidence(5,2,4))
+print("rcoincidence(5,2,3) = ", rcoincidence(5,2,3))
+print("rcoincidence(5,2,3.1) = ", rcoincidence(5,2,3.1))
+print("rvcoincidence(5,2,4,3) = ", rvcoincidence(5,2,4,3)) # delay off
+print("rvcoincidence(5,2,4,1) = ", rvcoincidence(5,2,4,1)) # delay on
+print("rvcoincidence(5,2,1,3) = ", rvcoincidence(5,2,1,3)) # delay off
+print("rvcoincidence(5,2,1,1) = ", rvcoincidence(5,2,1,1)) # delay on
