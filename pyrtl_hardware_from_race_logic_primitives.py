@@ -47,6 +47,30 @@ def rinput(name=None):
 def routput(name=None):
     return pyrtl.Output(bitwidth=1,name=name)
 
+### Additional Race Logic Elements ####################################
+#######################################################################
+
+# delays signal a by time c if inhibit signal i arives before a
+#   if (i<=a) return a+c , else (i>a) return a
+def rVdelta(i,c,a):
+    ''' variable delay function '''
+    delayed_signal = rdelta(c,a)
+    inhibited_signal = rinhibit(i,a)
+    return rmin(delayed_signal, inhibited_signal)
+
+# returns max(a,b) if a and b arive within fixed time c of eachother
+#   if (abs(a-b) < c) return rmax(a,b), else (abs(a-b) >= c) return -
+def rcoinc(c,a,b):
+    ''' timed max function '''
+    timer = rdelta(c,rmin(a,b))
+    return rinhibit(timer, rmax(a,b))
+
+# returns max(a,b) if a and b arive within variable time c of eachother
+#   delay is 'on' if i arives before the first of the two values; i <= rmin(a,b)
+def rVcoinc(i,c,a,b):
+    ''' variable timed max function '''
+    variable_timer = rVdelta(i,c,rmin(a,b))
+    return rinhibit(variable_timer, rmax(a,b))
 
 ### Functions for Testing  ############################################
 #######################################################################
@@ -101,13 +125,13 @@ def race_test(function):
     ''' Decorator for wrapping race-logic test functions.
         given a function with only kwargs, return a new function
         that maps each of those kwargs to a race-logic signal, runs
-        the simulation, and unmaps the race-logic output back to an 
+        the simulation, and unmaps the race-logic output back to an
         integer.  All kwargs are treated as input except for the special
         name "output" which is the signal to test at completion.'''
     def wrapper(*args, **kwargs):
         assert len(args) == 0  # only keyword args allowed
         pyrtl.reset_working_block()
-        # map inputs names 
+        # map inputs names
         race_kwargs = {k:r_from_str(k) for k,v in kwargs.items()}
         # build the test
         function(*args, **race_kwargs)
@@ -125,7 +149,7 @@ def race_test(function):
 ### Tests of Race Logic  ##############################################
 #######################################################################
 
-@race_test 
+@race_test
 def test_min(a, b, output):
     output <<= rmin(a, b)
 test_min(a=3, b=5, output=3)
@@ -133,7 +157,7 @@ test_min(a=2, b=1, output=1)
 test_min(a=3, b=None, output=3)
 test_min(a=None, b=None, output=None)
 
-@race_test 
+@race_test
 def test_max(a, b, output):
     output <<= rmax(a, b)
 test_max(a=3, b=5, output=5)
@@ -142,7 +166,7 @@ test_max(a=3, b=None, output=None)
 test_max(a=None, b=0, output=None)
 test_max(a=None, b=None, output=None)
 
-@race_test 
+@race_test
 def test_inhibit(a, b, output):
     output <<= rinhibit(a, b)
 test_inhibit(a=3, b=5, output=None)
