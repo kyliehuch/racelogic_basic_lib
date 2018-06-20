@@ -34,7 +34,8 @@ for cycle in range(15):
         'c': random.choice([0,1])
         })
 
-sim_trace.render_trace(symbol_len=5, segment_size=5)
+sim_trace.render_trace(trace_list=[a,b,c,sum,carry_out], symbol_len=5,
+                       segment_size=5)
 
 # check results
 for cycle in range(15):
