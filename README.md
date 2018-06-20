@@ -1,2 +1,2 @@
-# racelogic_basic_lib
-Repo for basic race logic gates
+# racelogic_pyrtl_basics
+Repo for basic race logic gates and pyrtl implementations.
