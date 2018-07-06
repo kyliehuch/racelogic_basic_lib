@@ -1,11 +1,11 @@
 import pyrtl
 import random
 
+
+# --------- Functions -----------
+
 def rmin(a,b):
     return a | b
-
-def rmax(a,b):
-    return a & b
 
 def rinhibit(i,a):
     ''' where i inhibits a '''
@@ -20,7 +20,7 @@ def rdelta(c,x):
     if c==0:
         rval = x
     else:
-        shiftreg = [pyrtl.Register(bitwidth=1) for i in range(c)]
+        shiftreg = [pyrtl.Register(bitwidth=x.bitwidth) for i in range(c)]
         interwire = x
         for i in range(c):
             shiftreg[i].next <<= interwire
@@ -28,65 +28,41 @@ def rdelta(c,x):
         rval = interwire
     return rval
 
-# delays signal a by time c if inhibit signal i arives before a
-#   if (i<=a) return a+c , else (i>a) return a
-def rVdelta(i,c,a):
-    ''' variable delay function '''
-    delayed_signal = rdelta(c,a)
-    inhibited_signal = rinhibit(i,a)
-    return rmin(delayed_signal, inhibited_signal)
+# vdelta gate: if excitatory signal arrives first, passes through undelayed, if inhibitory signal arrives first exititory signal is delayed
+#interwire1 <<= input
+def vrdelta(c,i,x):
+    interwire1 = rdelta(c, x)
+    interwire2 = rinhibit(i, x)
+    o = rmin(interwire1, interwire2)
+    return o
 
 
-# implementation of rdelta 'circut'
-wire_in, delay, output = pyrtl.Input(5, 'wire_in'), pyrtl.Input(5, 'delay'), pyrtl.Output(5, 'output')
+# ---------- Hardware -----------
 
-output <<= rdelta(
+input, inhibit = pyrtl.Input(1, "input"), pyrtl.Input(1, "inhibit")
+output = pyrtl.Output(1, "output")
 
-print('---------- rVdelta Implementation ----------')
-print(pyrtl.working_block())
-print()
+output <<= vrdelta(3, inhibit, input)
 
-print('---------- rVdelta Simulation ----------')
-sim_trace = pyrtl.SimulationTrace()
-sim = pyrtl.Simulation(tracer=sim_trace)
 
-for cycle in range(15):
-    sim.step({
-        'inhibit': random.choice([3,4,5,6,7,8]),
-        'delay': random.choice([0,1,2]),
-        'wire_in': random.choice([3,4,5,6,7,8])
-        })
+# ---------- Simulation ----------
 
-del_value = sim_trace.trace['delay']
-sim.inspect(delay)
-
-sim_trace.render_trace(trace_list=[inhibit,wire_in,delay,output],symbol_len=5,segment_size=5)
-
+# undelayed signal - excitory signal arrives first
+in_vals = [0,0,1,1,1,1,1,1,1,1]
+inhib_vals = [0,0,0,0,1,1,1,1,1,1]
 
 '''
-# implementation of rVdelta 'circut'
-inhibit, delay, wire_in = pyrtl.Input(5, 'inhibit'), pyrtl.Input(5, 'delay'), pyrtl.Input(5, 'wire_in')
-output = pyrtl.Output(5, 'output')
+# delayed signal - inhibitory signal arives first
+in_vals = [0,0,1,1,1,1,1,1,1,1]
+inhib_vals = [0,1,1,1,1,1,1,1,1,1]
+'''
 
-output <<= delay
 
-print('---------- rVdelta Implementation ----------')
-print(pyrtl.working_block())
-print()
-
-print('---------- rVdelta Simulation ----------')
 sim_trace = pyrtl.SimulationTrace()
 sim = pyrtl.Simulation(tracer=sim_trace)
-
-for cycle in range(15):
+for cycle in range(len(in_vals)):
     sim.step({
-        'inhibit': random.choice([3,4,5,6,7,8]),
-        'delay': random.choice([0,1,2]),
-        'wire_in': random.choice([3,4,5,6,7,8])
-        })
+        'input': in_vals[cycle],
+        'inhibit': inhib_vals[cycle]})
 
-del_value = sim_trace.trace['delay']
-sim.inspect(delay)
-
-sim_trace.render_trace(trace_list=[inhibit,wire_in,delay,output],symbol_len=5,segment_size=5)
-'''
+sim_trace.render_trace(trace_list=[input,inhibit,output])
