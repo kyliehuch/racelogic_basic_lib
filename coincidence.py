@@ -29,6 +29,7 @@ def rdelta(c,x):
         rval = interwire
     return rval
 
+# modified max gate that allows signal through if input signals arive within delay time and block signals otherwise (signals allowed through if they arive on delay time)
 def rcoincidence(c,x,y):
     timer_start = rmin(x, y)
     timer = rdelta(c, timer_start)
