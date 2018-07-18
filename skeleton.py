@@ -30,6 +30,14 @@ def rdelta(c,x):
         rval = interwire
     return rval
 
+# vdelta gate: if excitatory signal arrives first, passes through undelayed, if inhibitory signal arrives first exititory signal is delayed
+#interwire1 <<= input
+def vrdelta(c,i,x):
+    interwire1 = rdelta(c, x)
+    interwire2 = rinhibit(i, x)
+    o = rmin(interwire1, interwire2)
+    return o
+
 # takes list of wirevectors and number of signals required to 'fire' (refered to
 # fire as "threshold") as inputs
 def rvmax(t,*in_list):
@@ -38,7 +46,6 @@ def rvmax(t,*in_list):
     o = pyrtl.rtl_any(*prod_list)
     return o
 
-
 # modified max gate that allows signal through if input signals arive within delay time and block signals otherwise (signals allowed through if they arive on delay time)
 def rcoinc(c,x,y):
     timer_start = rmin(x, y)
@@ -46,7 +53,6 @@ def rcoinc(c,x,y):
     interwire = rmax(x, y)
     o = rinhibit(timer, interwire)
     return o
-
 
 # modified max gate that allows signal through if the threshold number of
 # input signals arive within delay time and block signals otherwise (signals
@@ -59,31 +65,51 @@ def rvcoinc(theshold, sensitivity_window, *in_list):
     return o
 
 
-# --------- Hardware -------------
+# --------- Skeleton Neuron -----------
 
-in1, in2, in3, in4, in5 = (pyrtl.Input(1, "in" + str(x)) for x in range(1,6))
+# exct_inputs and inhib_inputs are both lists of wirevectors
+def neuron(delay, threshold, sens_window, exct_inputs, inhib_inputs):
+    inhibit = pyrtl.rtl_any(*inhib_inputs)
+    interwire = rvcoinc(threshold, sens_window, *exct_inputs)
+    signal = rdelta(delay, interwire)
+    o = rinhibit(inhibit, signal)
+    return o
+
+# ------------ Hardware --------------
+
+ex1, ex2, ex3, ex4, ex5 = (pyrtl.Input(1, "ex" + str(x)) for x in range(1,6))
+inhb1, inhb2, inhb3 = (pyrtl.Input(1, "inhb" + str(x)) for x in range(1,4))
 out = pyrtl.Output(1, "out")
 
-# fire if the first 4 edges arive within 2 cycles of each other
-out <<= rvcoinc(4,2,in1,in2,in3,in4,in5)
+ex_list = [ex1, ex2, ex3, ex4, ex5]
+inhb_list = [inhb1, inhb2, inhb3]
+
+out <<= neuron(0,3,2,ex_list,inhb_list)
 
 
 # --------- Simulation ------------
 
-in1_vals = [0,0,1,1,1,1,1,1]
-in2_vals = [0,0,0,0,1,1,1,1]
-in3_vals = [0,0,0,1,1,1,1,1]
-in4_vals = [0,0,0,0,0,0,1,1]
-in5_vals = [0,0,0,0,0,1,1,1]
+ex1_vals = [0,0,1,1,1,1,1,1]
+ex2_vals = [0,0,0,0,1,1,1,1]
+ex3_vals = [0,0,0,1,1,1,1,1]
+ex4_vals = [0,0,0,0,0,0,1,1]
+ex5_vals = [0,0,0,0,0,1,1,1]
+
+inhb1_vals = [0,0,0,0,0,0,0,0]
+inhb2_vals = [0,0,0,1,1,1,1,1]
+inhb3_vals = [0,0,0,0,0,0,0,0]
 
 sim_trace = pyrtl.SimulationTrace()
 sim = pyrtl.Simulation(tracer=sim_trace)
-for cycle in range(len(in1_vals)):
+for cycle in range(len(ex1_vals)):
     sim.step({
-        'in1': in1_vals[cycle],
-        'in2': in2_vals[cycle],
-        'in3': in3_vals[cycle],
-        'in4': in4_vals[cycle],
-        'in5': in5_vals[cycle]})
+        'ex1': ex1_vals[cycle],
+        'ex2': ex2_vals[cycle],
+        'ex3': ex3_vals[cycle],
+        'ex4': ex4_vals[cycle],
+        'ex5': ex5_vals[cycle],
+        'inhb1': inhb1_vals[cycle],
+        'inhb2': inhb2_vals[cycle],
+        'inhb3': inhb3_vals[cycle]})
 
 sim_trace.render_trace()

@@ -1,15 +1,17 @@
 import itertools
 import pyrtl
 
-def test(*in_list):
+def test(in_list):
     return pyrtl.rtl_any(*in_list)
 
 
 in1, in2, in3, in4, in5 = (pyrtl.Input(1, "in" + str(x)) for x in range(1,6))
 out = pyrtl.Output(1, "out")
 
-out <<= test(in1,in2,in3,in4,in5)
+in_list = [in1,in2,in3,in4,in5]
 
+#out <<= test(in1,in2,in3,in4,in5)
+out <<= test(in_list)
 
 in1_vals = [0,0,1,1,1,1,1,1]
 in2_vals = [0,0,0,0,1,1,1,1]
