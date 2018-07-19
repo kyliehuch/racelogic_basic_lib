@@ -65,7 +65,7 @@ in1, in2, in3, in4, in5 = (pyrtl.Input(1, "in" + str(x)) for x in range(1,6))
 out = pyrtl.Output(1, "out")
 
 # fire if the first 4 edges arive within 2 cycles of each other
-out <<= rvcoinc(4,2,in1,in2,in3,in4,in5)
+out <<= rvcoinc(4,3,in1,in2,in3,in4,in5)
 
 
 # --------- Simulation ------------
