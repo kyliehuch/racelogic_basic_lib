@@ -1,7 +1,7 @@
 # Tim Sherwood
-#       pki   pai   pbi   pae   pbe
-param: 0.633 0.915 0.713 0.597 0.597    # x[0]
-param: 0.215 0.192 0.516 0.000 0.216    # x[1]
+#       pke   pai   pbi   pae   pbe
+param: 0.633 0.915 0.713 0.597 0.597    # h0
+param: 0.215 0.192 0.516 0.000 0.216    # h1
 param: 0.940 0.234 0.908 0.717 0.313    # out
 param: 1.313
 model (0,0) -> 0.0000

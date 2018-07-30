@@ -10,22 +10,22 @@ NSEEDS = 100
 # this is the "base unit" of the network,
 # which takes two inputs, 'a' and 'b', and
 # then a set of parameters.
-def node(a, b, pki, pai, pbi, pae, pbe):
-    i = min(a + pai, b + pbi)  # inhibit
-    # if inhibit is the first to arrive
-    if i <= min(a + pae, b + pbe, pki):
+def node(a, b, pke, pai, pbi, pae, pbe):
+    i = min(a + pai, b + pbi)
+    # inhibit if inhibit is the first to arrive
+    if i <= min(a + pae, b + pbe, pke):
         # wait for all of the inputs to arrive
-        return max(a + pae, b + pbe, pki)
+        return max(a + pae, b + pbe, pke)
     else:
         # fire as soon as any of the inputs arrive
-        return min(a + pae, b + pbe, pki)
+        return min(a + pae, b + pbe, pke)
 NPARAM = node.__code__.co_argcount - 2
 
 # this is the network of nodes that will be trained.
 # There is one hidden layer with two nodes (h0 and h1)
 # and then a output node (out).  x[0] and x[1] are
 # the inputs 'a' and 'b', and 'p' is the list of paramters
-# which will then bee partioned up and fed to each of the
+# which will then be partioned up and fed to each of the
 # nodes.
 def ref(x,p):
     # x[0]---h0
@@ -43,8 +43,8 @@ def pslice(p,set):
 # the model that defines the "right' answer.  The ref
 # parameters will be trained to fit this model
 def model(x):
-    #return x[0] ^ x[1]  # xor
-    return 0 if x[0]==1 and x[1]==1 else 1  # nand
+    return x[0] ^ x[1]  # xor
+    #return 0 if x[0]==1 and x[1]==1 else 1  # nand
 
 # this function tells us how "close" a list of parameters
 # p, when applied to ref above, as compared to the model.
