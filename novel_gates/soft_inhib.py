@@ -43,8 +43,8 @@ def pslice(p,set):
 # the model that defines the "right' answer.  The ref
 # parameters will be trained to fit this model
 def model(x):
-    return x[0] ^ x[1]  # xor
-    #return 0 if x[0]==1 and x[1]==1 else 1  # nand
+    #return x[0] ^ x[1]  # xor
+    return 0 if x[0]==1 and x[1]==1 else 1  # nand
 
 # this function tells us how "close" a list of parameters
 # p, when applied to ref above, as compared to the model.
