@@ -32,7 +32,7 @@ def rdelta(c,x):
 
 # vdelta gate: if excitatory signal arrives first, passes through undelayed, if inhibitory signal arrives first exititory signal is delayed
 #interwire1 <<= input
-def vrdelta(c,i,x):
+def rvdelta(c,i,x):
     interwire1 = rdelta(c, x)
     interwire2 = rinhibit(i, x)
     o = rmin(interwire1, interwire2)
