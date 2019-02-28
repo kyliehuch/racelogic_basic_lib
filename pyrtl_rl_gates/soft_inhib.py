@@ -21,6 +21,19 @@ def node(a, b, pke, pai, pbi, pae, pbe):
         return min(a + pae, b + pbe, pke)
 NPARAM = node.__code__.co_argcount - 2
 
+'''
+def node2(a, b, t, pai, pbi, pae, pbe):
+    i = min(a + pai, b + pbi)
+
+
+
+def rvmax(t,*in_list):
+    combo_list = list(itertools.combinations(in_list,t))
+    prod_list = [pyrtl.rtl_all(*x) for x in combo_list]
+    o = pyrtl.rtl_any(*prod_list)
+    return o
+'''
+
 # this is the network of nodes that will be trained.
 # There is one hidden layer with two nodes (h0 and h1)
 # and then a output node (out).  x[0] and x[1] are
