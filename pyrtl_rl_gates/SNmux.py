@@ -51,7 +51,7 @@ def sn(a,b,c,d):
 def SNmux(d,n,m,a1,a2,a3,a4):
     outs = sn(in1,in2,in3,in4)
     temp1 = pyrtl.mux(n,outs[0],outs[1],outs[2],outs[3])
-    temp2 = rdelta(2,temp1)
+    temp2 = rdelta(d,temp1)
     temp3 = pyrtl.mux(m,outs[0],outs[1],outs[2],outs[3])
     return rinhibit(temp2,temp3)
 
