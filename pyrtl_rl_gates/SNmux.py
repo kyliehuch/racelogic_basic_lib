@@ -48,7 +48,11 @@ def sn(a,b,c,d):
 #---------- Hardware ---------
 
 in1, in2, in3, in4 = (pyrtl.Input(1, "in" + str(x)) for x in range(1,5))
-o1, o2, o3, o4 = (pyrtl.Output(1, "o" + str(x)) for x in range(1,5))
+o1, o2, o3, o4 = (pyrtl.WireVector(1, "o" + str(x)) for x in range(1,5))
+out = pyrtl.Output(1, "out")
+temp1, temp2, temp3 = (pyrtl.WireVector(1, "temp" + str(x)) for x in range(1,4))
+n, m = pyrtl.Const(1,2), pyrtl.Const(2,2)
+
 
 outs = sn(in1,in2,in3,in4)
 o1 <<= outs[0]
@@ -56,11 +60,16 @@ o2 <<= outs[1]
 o3 <<= outs[2]
 o4 <<= outs[3]
 
+temp1 <<= pyrtl.mux(n,o1,o2,o3,o4)
+temp2 <<= rdelta(2,temp1)
+temp3 <<= pyrtl.mux(m,o1,o2,o3,o4)
+out <<= rinhibit(temp2,temp3)
+
 #--------- Simulation ---------
 
 in1_vals = [0,0,1,1,1,1,1,1]
-in2_vals = [0,0,0,0,1,1,1,1]
-in3_vals = [0,0,0,1,1,1,1,1]
+in2_vals = [0,0,0,0,0,1,1,1]
+in3_vals = [0,1,1,1,1,1,1,1]
 in4_vals = [0,0,0,0,0,0,1,1]
 
 sim_trace = pyrtl.SimulationTrace()
